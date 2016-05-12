@@ -79,6 +79,11 @@ public class LayoutFile{
 	
 	public List<String> getRows() {
 		List<String> results = new ArrayList<String>();
+	
+		if (current.size() > 0){
+			newLine();
+			current = new ArrayList<Data>();
+		}
 		
 		for(List<Data> d : rows)
 			results.add(formatData(d));
@@ -101,9 +106,9 @@ public class LayoutFile{
 	}
 	
 	public void newLine() {
-		if ((current.size() > 0) && (rows.size() > 0)){
+		if (current.size() > 0){
 			rows.add(current);
-			current.clear();
+			current = new ArrayList<Data>();
 		}
 		
 		for(LayoutIndex li : fields){
@@ -120,7 +125,7 @@ public class LayoutFile{
 	private String formatData(List<Data> datas){
 		String result = "";
 		for (Data li : datas){
-			String r = format(li.getLi(), li.getValor());
+			String r = format(li.getLi(), li.getValor(),false);
 			if (delimitador != null)
 				r += delimitador;
 
@@ -132,7 +137,7 @@ public class LayoutFile{
 	private String formatTitle(List<LayoutIndex> fields){
 		String result = "";
 		for (LayoutIndex li : fields){
-			String r = format(li, li.getIdField());
+			String r = format(li, li.getIdField(), true);
 			if (delimitador != null)
 				r += delimitador;
 			
@@ -141,16 +146,38 @@ public class LayoutFile{
 		return result.substring( 0, result.length()-1);
 	}
 	
-	private String format(LayoutIndex li, String v){
-		String result = "";
-	
+	private String format(LayoutIndex li, String v, Boolean forceSpace){
+		String 	result 	= "";
+		String 	spaces	= null;
+		int		nSpaces	= li.getTamanho() - v.trim().length();
+		
+		if (li.getPreenchimento() != this.ABSOLUTO){
+			spaces = "";
+			for(int i =0; i < nSpaces; i++){
+				if (!forceSpace){
+					spaces += (li.getPreenchimento() == this.ZERO)?"0":" ";
+				}
+				else{
+					spaces += " ";
+				}
+			}
+			
+			if (li.getAlinhamento() == this.ALINHAMENTO_DIREITO){
+				result = spaces+v.trim();
+			}
+			else
+				result = v.trim()+spaces;
+		}
+		else{
+			result = v;
+		}
 		
 		return result;
 	}
 
 	public void defineSeparador( String separador ) { delimitador = separador; }
 	public void defineTitle( boolean b ) { hasTitle = b; }
-	public void define( String idField, int datatype, int alinhamento, int preenchimento, int tamanho) { define(idField,datatype,alinhamento,preenchimento,tamanho, null); }
+	public void define( String idField, int datatype, int alinhamento, int preenchimento, int tamanho) { define(idField,datatype,alinhamento,preenchimento,tamanho, ""); }
 	public void set( String idField, double value ) { set(idField, String.valueOf( value )); }
 	public void set( String idField, int value ) { set(idField, String.valueOf( value )); }
 }
