@@ -119,4 +119,13 @@ public class ExportFile {
 			throw e;
 		}
 	}
+	
+	/**
+	 * Limpa os dados de todos os layouts
+	 */
+	public void removeAllLines(){
+		for (LayoutIndex row : layouts){
+			row.getLayoutFile().removeAllLines();
+		}
+	}
 }

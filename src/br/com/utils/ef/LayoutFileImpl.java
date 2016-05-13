@@ -5,19 +5,10 @@ import java.util.List;
 
 /**
  * 
- * @author bruno.oliveira
+ * @author brupinto
  *
  */
 public class LayoutFileImpl  implements LayoutFile {
-	public static final int STRING  				= 10;
-	public static final int NUMERIC 				= 11;
-	public static final int DECIMAL 				= 12;
-	public static final int ALINHAMENTO_ESQUERDO 	= 20;
-	public static final int ALINHAMENTO_DIREITO  	= 21;
-	public static final int ESPACO 					= 30;
-	public static final int ZERO 					= 31;
-	public static final int ABSOLUTO 				= 32;
-
 	private class LayoutIndex{
 		private String 	idField;
 		private int 	dataType;
@@ -29,11 +20,8 @@ public class LayoutFileImpl  implements LayoutFile {
 		public String getIdField() { return idField; }
 		@SuppressWarnings( "unused" )
 		public int getDataType() { return dataType;	}
-		@SuppressWarnings( "unused" )
 		public int getAlinhamento() { return alinhamento; }
-		@SuppressWarnings( "unused" )
 		public int getPreenchimento() { return preenchimento; }
-		@SuppressWarnings( "unused" )
 		public int getTamanho() { return tamanho; }
 		public String getValorDefault() { return valorDefault; }
 	
@@ -53,10 +41,8 @@ public class LayoutFileImpl  implements LayoutFile {
 		private String 		valor;
 		public String getIdField() { return idField; }
 		public void setIdField( String idField ) { this.idField = idField; }
-		@SuppressWarnings( "unused" )
 		public LayoutIndex getLi() { return li; }
 		public void setLi( LayoutIndex li ) { this.li = li; }
-		@SuppressWarnings( "unused" )
 		public String getValor() { return valor; }
 		public void setValor( String valor ) { this.valor = valor; }
 	}
@@ -67,7 +53,7 @@ public class LayoutFileImpl  implements LayoutFile {
 	private Boolean 			hasTitle			= false;
 	private String 				delimitador			= null;
 
-	@Override
+	
 	public String getTitle() {
 		String result = null;
 		
@@ -78,7 +64,7 @@ public class LayoutFileImpl  implements LayoutFile {
 		return result;
 	}
 	
-	@Override
+	
 	public List<String> getRows() {
 		List<String> results = new ArrayList<String>();
 	
@@ -93,13 +79,13 @@ public class LayoutFileImpl  implements LayoutFile {
 		return results;
 	}
 	
-	@Override
+	
 	public void define( String idField, int datatype, int alinhamento, int preenchimento, int tamanho, String valordefault) {
 		LayoutIndex li = new LayoutIndex(idField, datatype, alinhamento, preenchimento, tamanho, valordefault);
 		fields.add(li);
 	}
 
-	@Override
+	
 	public void set( String idField, String value ) {
 		for(Data data : current){
 			if (data.getIdField().equals( idField )){
@@ -109,7 +95,7 @@ public class LayoutFileImpl  implements LayoutFile {
 		}
 	}
 	
-	@Override
+	
 	public void newLine() {
 		if (current.size() > 0){
 			rows.add(current);
@@ -136,7 +122,11 @@ public class LayoutFileImpl  implements LayoutFile {
 
 			result += r;
 		}
-		return result.substring( 0, result.length()-1);
+		
+		if (delimitador != null)
+			result = result.substring( 0, result.length()-1);
+		
+		return result;
 	}
 
 	private String formatTitle(List<LayoutIndex> fields){
@@ -148,7 +138,11 @@ public class LayoutFileImpl  implements LayoutFile {
 			
 			result += r;
 		}
-		return result.substring( 0, result.length()-1);
+		
+		if (delimitador != null)
+			result = result.substring( 0, result.length()-1);
+		
+		return result;
 	}
 	
 	private String format(LayoutIndex li, String v, Boolean forceSpace){
@@ -156,18 +150,18 @@ public class LayoutFileImpl  implements LayoutFile {
 		String 	spaces	= null;
 		int		nSpaces	= li.getTamanho() - v.trim().length();
 		
-		if (li.getPreenchimento() != this.ABSOLUTO){
+		if (li.getPreenchimento() != ABSOLUTO){
 			spaces = "";
 			for(int i =0; i < nSpaces; i++){
 				if (!forceSpace){
-					spaces += (li.getPreenchimento() == this.ZERO)?"0":" ";
+					spaces += (li.getPreenchimento() == ZERO)?"0":" ";
 				}
 				else{
 					spaces += " ";
 				}
 			}
 			
-			if (li.getAlinhamento() == this.ALINHAMENTO_DIREITO){
+			if (li.getAlinhamento() == ALINHAMENTO_DIREITO){
 				result = spaces+v.trim();
 			}
 			else
@@ -180,14 +174,16 @@ public class LayoutFileImpl  implements LayoutFile {
 		return result;
 	}
 
-	@Override
+	
 	public void defineSeparador( String separador ) { delimitador = separador; }
-	@Override
 	public void defineTitle( boolean b ) { hasTitle = b; }
-	@Override
 	public void define( String idField, int datatype, int alinhamento, int preenchimento, int tamanho) { define(idField,datatype,alinhamento,preenchimento,tamanho, ""); }
-	@Override
 	public void set( String idField, double value ) { set(idField, String.valueOf( value )); }
-	@Override
 	public void set( String idField, int value ) { set(idField, String.valueOf( value )); }
+	public void removeAllLines() {
+		rows 	= null;
+		current = null;
+		rows 	= new ArrayList<List<Data>>();
+		current = new ArrayList<Data>();
+	}
 }
