@@ -14,14 +14,14 @@ import java.util.List;
 public class ExportFile {
 	private class LayoutIndex {
 		private String 		identificadorLayout;
-		private	LayoutFile 	layoutFile;
+		private	LayoutFileImpl 	layoutFile;
 
-		public LayoutIndex(String s, LayoutFile l){
+		public LayoutIndex(String s, LayoutFileImpl l){
 			identificadorLayout = s;
 			layoutFile = l;
 		}
 		public String		getIdentificadorLayout(){ return identificadorLayout;}
-		public LayoutFile 	getLayoutFile(){ return layoutFile;}
+		public LayoutFileImpl 	getLayoutFile(){ return layoutFile;}
 	}
 	
 	private List<LayoutIndex>	layouts = new ArrayList<LayoutIndex>();
@@ -31,8 +31,8 @@ public class ExportFile {
 	 * @param identificadorLayout - Identificador do Layout
 	 * @return - Objeto do Layout
 	 */
-	public LayoutFile newLayout( String identificadorLayout ) {
-		LayoutFile 	lf = new LayoutFile();
+	public LayoutFileImpl newLayout( String identificadorLayout ) {
+		LayoutFileImpl 	lf = new LayoutFileImpl();
 		LayoutIndex	li = new LayoutIndex(identificadorLayout, lf); 
 		layouts.add(li);
 		
@@ -44,8 +44,8 @@ public class ExportFile {
 	 * @param identificadorLayout - Identificador do Layout
 	 * @return - Objeto do Layout
 	 */
-	public LayoutFile getLayout( String identificadorLayout ) {
-		LayoutFile lf = null;
+	public LayoutFileImpl getLayout( String identificadorLayout ) {
+		LayoutFileImpl lf = null;
 		
 		for (LayoutIndex row : layouts){
 			if (row.getIdentificadorLayout().equals( identificadorLayout )){
@@ -94,7 +94,7 @@ public class ExportFile {
 			bufferedWriter 	= new BufferedWriter(fileWriter);
 
 			for (LayoutIndex row : layouts){
-				LayoutFile 	lf 		= row.getLayoutFile();
+				LayoutFileImpl 	lf 		= row.getLayoutFile();
 				String 		title 	= lf.getTitle();
 				
 				if (title != null){
