@@ -5,50 +5,30 @@ public class App {
 
 	public static void main( String[] args ) {
 		(new App()).montaArquivo();
+		System.out.println("fim.");
 	}
 
 	private void montaArquivo(){
-		
 		ExportFile ef 		= 	new ExportFile();
-		
-		ef.newLayout("HEADER");
-		ef.newLayout("BODY");
-		ef.newLayout("TRAILER");
-
-	    LayoutFile layout = ef.getLayout("HEADER");
+	    LayoutFile layout 	= ef.newLayout("HEADER");
 	    
 	    layout.define("idSection", LayoutFile.NUMERIC, LayoutFile.ALINHAMENTO_DIREITO, LayoutFile.ZERO, 2);
-	    layout.define("fileName", LayoutFile.STRING, LayoutFile.ALINHAMENTO_ESQUERDO, LayoutFile.ESPACO, 10);
-	    layout.define("filler", LayoutFile.STRING, LayoutFile.ALINHAMENTO_ESQUERDO, LayoutFile.ESPACO, 18);
-	        
-		layout = ef.getLayout("BODY");
-
-		layout.define("idSection", LayoutFile.NUMERIC, LayoutFile.ALINHAMENTO_DIREITO, LayoutFile.ZERO, 2, "1");
-	    layout.define("name", LayoutFile.STRING, LayoutFile.ALINHAMENTO_ESQUERDO, LayoutFile.ESPACO, 3);
-	    layout.define("id", LayoutFile.NUMERIC, LayoutFile.ALINHAMENTO_DIREITO, LayoutFile.ESPACO, 5);
-		layout.define("filler", LayoutFile.STRING, LayoutFile.ALINHAMENTO_ESQUERDO, LayoutFile.ESPACO, 20);
-
-		layout = ef.getLayout("TRAILER");
-
-		layout.define("idSection", LayoutFile.NUMERIC, LayoutFile.ALINHAMENTO_DIREITO, LayoutFile.ZERO, 2, "99");
-	    layout.define("filler", LayoutFile.STRING, LayoutFile.ALINHAMENTO_DIREITO, LayoutFile.ESPACO, 28);
+	    layout.define("descricao", LayoutFile.STRING, LayoutFile.ALINHAMENTO_ESQUERDO, LayoutFile.ESPACO, 10);
+	    layout.define("sequencial", LayoutFile.NUMERIC, LayoutFile.ALINHAMENTO_DIREITO, LayoutFile.ZERO, 5);
 	    
-	    ef.format("HEADER", "BODY", "TRAILER");
-	    
-	    layout = ef.getLayout("HEADER");
-		layout.newLine();
-		layout.set("fileName", "test.txt");
-
-		layout = ef.getLayout("BODY");
-
-		for (int i = 0; i < 10; i++){
-			layout.newLine();
-			layout.set("id", i);
+	    for (int i = 100; i < 150; i++){
+			int row = layout.newLine();
+			layout.set("idSection", i);
+			layout.set("descricao", "ds_"+i);
+			layout.set("sequencial", row);
 		} 
 
-		layout = ef.getLayout("TRAILER");
+		layout = ef.newLayout("TRAILER");
+	    layout.define("id", LayoutFile.STRING, LayoutFile.ALINHAMENTO_ESQUERDO, LayoutFile.ESPACO, 7,"TRAILER");
+	    layout.define("filler", LayoutFile.NUMERIC, LayoutFile.ALINHAMENTO_DIREITO, LayoutFile.ZERO, 11);
 		layout.newLine();
-		layout.set("filler","EOF.");
+		
+		ef.format("HEADER","TRAILER");
 		
 		try{
 			ef.saveFile("test/test.txt");

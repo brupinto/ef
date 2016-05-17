@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Implementation of LayoutFile interface.
  * 
  * @author brupinto
+ * @since 17/005/2016
  *
  */
 public class LayoutFileImpl  implements LayoutFile {
@@ -96,7 +98,7 @@ public class LayoutFileImpl  implements LayoutFile {
 	}
 	
 	
-	public void newLine() {
+	public int newLine() {
 		if (current.size() > 0){
 			rows.add(current);
 			current = new ArrayList<Data>();
@@ -111,6 +113,8 @@ public class LayoutFileImpl  implements LayoutFile {
 			
 			current.add(d);
 		}
+		
+		return getCurrentRow();
 	}
 	
 	private String formatData(List<Data> datas){
@@ -174,7 +178,24 @@ public class LayoutFileImpl  implements LayoutFile {
 		return result;
 	}
 
-	
+	public int	getCurrentRow(){
+		int row = 0;
+		row = rows.size();
+
+		if (current.size() > 0)
+			row ++;
+			
+		return row;
+	}
+	public int getTotalRows(){
+		int row = 0;
+		row = rows.size();
+		
+		if (hasTitle)
+			row ++;
+		
+		return row;
+	}
 	public void defineSeparador( String separador ) { delimitador = separador; }
 	public void defineTitle( boolean b ) { hasTitle = b; }
 	public void define( String idField, int datatype, int alinhamento, int preenchimento, int tamanho) { define(idField,datatype,alinhamento,preenchimento,tamanho, ""); }

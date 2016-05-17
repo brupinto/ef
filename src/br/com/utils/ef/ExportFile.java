@@ -7,8 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Class ExportFile represente the file want export
  * 
  * @author brupinto
+ * @since 17/05/2016
  *
  */
 public class ExportFile {
