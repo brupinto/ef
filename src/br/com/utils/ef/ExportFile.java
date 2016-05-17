@@ -130,4 +130,19 @@ public class ExportFile {
 			row.getLayoutFile().removeAllLines();
 		}
 	}
+	
+	/**
+	 * Get total rows of file include total rows of each layout in the file
+	 * 
+	 * @return total of rows in the file
+	 */
+	public int getTotalRows(){
+		int rows = 0;
+		
+		for (LayoutIndex row : layouts){
+			rows += row.getLayoutFile().getTotalRows();
+		}
+		
+		return rows;
+	}
 }
