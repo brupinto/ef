@@ -191,6 +191,9 @@ public class LayoutFileImpl  implements LayoutFile {
 		int row = 0;
 		row = rows.size();
 		
+		if (current.size() > 0)
+			row ++;
+		
 		if (hasTitle)
 			row ++;
 		
