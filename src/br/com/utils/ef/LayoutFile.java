@@ -1,6 +1,6 @@
 package br.com.utils.ef;
 
-import java.util.List;
+import java.io.FileInputStream;
 
 /**
  * Interface of manipulating a layout of file
@@ -52,7 +52,7 @@ public interface LayoutFile {
 	 * Retrieve all rows data formatted
 	 * @return List<String> with all hows
 	 */
-	public List<String> getRows();
+	public FileInputStream getRows();
 	/**
 	 * Define propeties about new field 
 	 * @param idField - field identify
@@ -124,4 +124,9 @@ public interface LayoutFile {
 	 * Clear data pool and put it empty
 	 */
 	public void removeAllLines();
+	
+	/**
+	 * close layout buffer data
+	 */
+	public void close();
 }

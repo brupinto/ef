@@ -1,7 +1,7 @@
 package br.com.utils.ef;
 
-import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +20,7 @@ public class ExportFile {
 
 		public LayoutIndex(String s, LayoutFileImpl l){
 			identificadorLayout = s;
-			layoutFile = l;
+			layoutFile 			= l;
 		}
 		public String		getIdentificadorLayout(){ return identificadorLayout;}
 		public LayoutFileImpl 	getLayoutFile(){ return layoutFile;}
@@ -34,9 +34,15 @@ public class ExportFile {
 	 * @return - Objeto do Layout
 	 */
 	public LayoutFileImpl newLayout( String identificadorLayout ) {
-		LayoutFileImpl 	lf = new LayoutFileImpl();
-		LayoutIndex	li = new LayoutIndex(identificadorLayout, lf); 
-		layouts.add(li);
+		LayoutFileImpl 	lf = null;
+		try{
+			lf = new LayoutFileImpl();
+			LayoutIndex	li = new LayoutIndex(identificadorLayout, lf); 
+			layouts.add(li);
+		}
+		catch(Exception e){
+			System.out.println("[EF ERRO] "+e);
+		}
 		
 		return lf;
 	}
@@ -87,37 +93,35 @@ public class ExportFile {
 	 * @throws Exception - dispado se ocorreu algum erro ao tentar escrever o arquivo de saida
 	 */
 	public void saveFile( String pathfilename )  throws Exception {
-		FileWriter 		fileWriter 		= null;
-		BufferedWriter 	bufferedWriter 	= null;
-		
+		FileWriter	fw	= null;
+			
 		try{
-			File file		= new File(pathfilename);
-			fileWriter 		= new FileWriter(file);
-			bufferedWriter 	= new BufferedWriter(fileWriter);
+			File file	= new File(pathfilename);
+			fw	 		= new FileWriter(file);
 
 			for (LayoutIndex row : layouts){
-				LayoutFileImpl 	lf 		= row.getLayoutFile();
-				String 		title 	= lf.getTitle();
+				LayoutFile	 	lf 		= row.getLayoutFile();
+				String 			title 	= lf.getTitle();
+				FileInputStream fis 	= lf.getRows();
+				int				c 		= fis.read();
 				
 				if (title != null){
-					bufferedWriter.write(title);
-					bufferedWriter.write("\r\n");
+					fw.write(title);
+					fw.write("\r\n");
 				}
-				
-				for (String l : lf.getRows()){
-					bufferedWriter.write(l);
-					bufferedWriter.write("\r\n");
+
+				while (c != -1){
+					fw.write( c );
+					c = fis.read();
 				}
+				fis.close();
+				lf.close();
 			}
 			
-			bufferedWriter.close();
-			fileWriter.close();
-			fileWriter 		= null;
-			bufferedWriter 	= null;
-			
+			fw.close();
+			fw	= null;
 		}catch(Exception e){
-			fileWriter 		= null;
-			bufferedWriter 	= null;
+			fw 	= null;
 			throw e;
 		}
 	}

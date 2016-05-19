@@ -1,6 +1,11 @@
 package br.com.utils.ef;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -18,6 +23,7 @@ public class LayoutFileImpl  implements LayoutFile {
 		private int 	preenchimento;
 		private int		tamanho;
 		private String  valorDefault;
+
 	
 		public String getIdField() { return idField; }
 		@SuppressWarnings( "unused" )
@@ -36,7 +42,6 @@ public class LayoutFileImpl  implements LayoutFile {
 			this.valorDefault	= valordefault;
 		}
 	}
-	
 	private class Data{
 		private String 		idField;
 		private LayoutIndex li;
@@ -49,12 +54,25 @@ public class LayoutFileImpl  implements LayoutFile {
 		public void setValor( String valor ) { this.valor = valor; }
 	}
 	
-	private List<LayoutIndex> 	fields 				= new ArrayList<LayoutIndex>();
-	private List<Data>			current				= new ArrayList<Data>();
-	private List<List<Data>>	rows				= new ArrayList<List<Data>>();
-	private Boolean 			hasTitle			= false;
-	private String 				delimitador			= null;
-
+	private List<LayoutIndex> 	fields 		= new ArrayList<LayoutIndex>();
+	private List<Data>			current		= new ArrayList<Data>();
+	private int					rows		= 0;
+	private Boolean 			hasTitle	= false;
+	private String 				delimitador	= null;
+	private File    			bf 			= null;
+		 
+	public LayoutFileImpl() throws Exception {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssz");
+		bf	= File.createTempFile( ".EF_", sdf.format( new Date() ) );
+	}
+	
+	public void close(){
+		try{
+			bf.deleteOnExit();
+		}catch(Exception e){
+			System.out.println("[EF ERRO] "+e);
+		}
+	}
 	
 	public String getTitle() {
 		String result = null;
@@ -66,21 +84,20 @@ public class LayoutFileImpl  implements LayoutFile {
 		return result;
 	}
 	
-	
-	public List<String> getRows() {
-		List<String> results = new ArrayList<String>();
-	
+	public FileInputStream getRows() {
+		FileInputStream fis = null;
+		
 		if (current.size() > 0){
 			newLine();
-			current = new ArrayList<Data>();
 		}
 		
-		for(List<Data> d : rows)
-			results.add(formatData(d));
-		
-		return results;
+		try{
+			fis = new FileInputStream(bf);
+		}catch(Exception e){
+			System.out.println("[EF ERRO] "+e);
+		}
+		return fis;
 	}
-	
 	
 	public void define( String idField, int datatype, int alinhamento, int preenchimento, int tamanho, String valordefault) {
 		LayoutIndex li = new LayoutIndex(idField, datatype, alinhamento, preenchimento, tamanho, valordefault);
@@ -97,11 +114,11 @@ public class LayoutFileImpl  implements LayoutFile {
 		}
 	}
 	
-	
 	public int newLine() {
 		if (current.size() > 0){
-			rows.add(current);
-			current = new ArrayList<Data>();
+			rows++;
+			writeTempFile();
+			current.clear();
 		}
 		
 		for(LayoutIndex li : fields){
@@ -115,6 +132,16 @@ public class LayoutFileImpl  implements LayoutFile {
 		}
 		
 		return getCurrentRow();
+	}
+	
+	private void writeTempFile() {
+		try{
+			FileWriter 	fw	= new FileWriter(bf,true);
+			fw.write(formatData(current)+"\r\n");
+			fw.close();
+		}catch(Exception e){
+			System.out.println("[EF ERRO] "+e);
+		}
 	}
 	
 	private String formatData(List<Data> datas){
@@ -180,16 +207,17 @@ public class LayoutFileImpl  implements LayoutFile {
 
 	public int	getCurrentRow(){
 		int row = 0;
-		row = rows.size();
+		row = rows;
 
 		if (current.size() > 0)
 			row ++;
 			
 		return row;
 	}
+	
 	public int getTotalRows(){
 		int row = 0;
-		row = rows.size();
+		row = rows;
 		
 		if (current.size() > 0)
 			row ++;
@@ -199,15 +227,15 @@ public class LayoutFileImpl  implements LayoutFile {
 		
 		return row;
 	}
+	
 	public void defineSeparador( String separador ) { delimitador = separador; }
 	public void defineTitle( boolean b ) { hasTitle = b; }
 	public void define( String idField, int datatype, int alinhamento, int preenchimento, int tamanho) { define(idField,datatype,alinhamento,preenchimento,tamanho, ""); }
 	public void set( String idField, double value ) { set(idField, String.valueOf( value )); }
 	public void set( String idField, int value ) { set(idField, String.valueOf( value )); }
 	public void removeAllLines() {
-		rows 	= null;
+		rows	= 0;
 		current = null;
-		rows 	= new ArrayList<List<Data>>();
 		current = new ArrayList<Data>();
 	}
 }

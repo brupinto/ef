@@ -13,7 +13,7 @@ public class App {
 		LayoutFile layout 	= ef.newLayout("HEADER");
 		
 	    layout.define("id", LayoutFile.STRING, LayoutFile.ALINHAMENTO_ESQUERDO, LayoutFile.ESPACO, 7,"HEADER");
-	    layout.define("totalLinhas", LayoutFile.NUMERIC, LayoutFile.ALINHAMENTO_DIREITO, LayoutFile.ZERO,11);
+	    layout.define("totalLinhas", LayoutFile.NUMERIC, LayoutFile.ALINHAMENTO_DIREITO, LayoutFile.ZERO,33);
 	    layout.defineSeparador( ";" );
 	    layout.defineTitle( true );
 		layout.newLine();
@@ -21,12 +21,12 @@ public class App {
 		
 		layout = ef.newLayout("BODY");
 	    
-	    layout.define("idSection", LayoutFile.NUMERIC, LayoutFile.ALINHAMENTO_DIREITO, LayoutFile.ZERO, 2);
-	    layout.define("descricao", LayoutFile.STRING, LayoutFile.ALINHAMENTO_ESQUERDO, LayoutFile.ESPACO, 10);
-	    layout.define("sequencial", LayoutFile.NUMERIC, LayoutFile.ALINHAMENTO_DIREITO, LayoutFile.ZERO, 5);
+	    layout.define("idSection", LayoutFile.NUMERIC, LayoutFile.ALINHAMENTO_DIREITO, LayoutFile.ZERO, 10);
+	    layout.define("descricao", LayoutFile.STRING, LayoutFile.ALINHAMENTO_ESQUERDO, LayoutFile.ESPACO, 20);
+	    layout.define("sequencial", LayoutFile.NUMERIC, LayoutFile.ALINHAMENTO_DIREITO, LayoutFile.ZERO, 10);
 	    
 	    
-	    for (int i = 0; i < 550000; i++){
+	    for (int i = 0; i < 50; i++){
 		
 	    	int row = layout.newLine();
 			layout.set("idSection", i);
@@ -35,8 +35,9 @@ public class App {
 		} 
 	    
 		layout = ef.newLayout("TRAILER");
+		
 	    layout.define("id", LayoutFile.STRING, LayoutFile.ALINHAMENTO_ESQUERDO, LayoutFile.ESPACO, 7,"TRAILER");
-	    layout.define("filler", LayoutFile.NUMERIC, LayoutFile.ALINHAMENTO_DIREITO, LayoutFile.ZERO, 11);
+	    layout.define("filler", LayoutFile.NUMERIC, LayoutFile.ALINHAMENTO_DIREITO, LayoutFile.ZERO, 33);
 		layout.newLine();
 		
 		ef.format("HEADER","BODY","TRAILER");
