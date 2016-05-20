@@ -62,10 +62,15 @@ public class LayoutFileImpl  implements LayoutFile {
 	private File    			bf 			= null;
 		 
 	public LayoutFileImpl() throws Exception {
+		
+		createBufFile();
+		
+	}
+	
+	private void createBufFile() throws Exception {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssz");
 		bf	= File.createTempFile( ".EF_", sdf.format( new Date() ) );
 	}
-	
 	public void close(){
 		try{
 			bf.deleteOnExit();
@@ -234,6 +239,12 @@ public class LayoutFileImpl  implements LayoutFile {
 	public void set( String idField, double value ) { set(idField, String.valueOf( value )); }
 	public void set( String idField, int value ) { set(idField, String.valueOf( value )); }
 	public void removeAllLines() {
+		close();
+		try{
+			createBufFile();
+		} catch(Exception e){
+			System.out.println("[EF ERRO] "+e);
+		}
 		rows	= 0;
 		current = null;
 		current = new ArrayList<Data>();
