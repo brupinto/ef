@@ -79,6 +79,12 @@ public interface LayoutFile {
 	 */
 	public void defineSeparador( String separador );
 	/**
+	 * Define if the data of field will truncate the data with field lenght.	
+	 * @param b
+	 */
+	public void defineTruncateField(boolean b);
+	
+	/**
 	 * Define if you want show up field titles in the file
 	 * @param b true  - show
 	 *          false - don't show 

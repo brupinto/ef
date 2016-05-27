@@ -58,6 +58,7 @@ public class LayoutFileImpl  implements LayoutFile {
 	private List<Data>			current		= new ArrayList<Data>();
 	private int					rows		= 0;
 	private Boolean 			hasTitle	= false;
+	private Boolean 			isTruncate	= false;
 	private String 				delimitador	= null;
 	private File    			bf 			= null;
 		 
@@ -65,6 +66,10 @@ public class LayoutFileImpl  implements LayoutFile {
 		
 		createBufFile();
 		
+	}
+	
+	public void defineTruncateField(boolean b){
+		isTruncate = b;
 	}
 	
 	private void createBufFile() throws Exception {
@@ -196,6 +201,10 @@ public class LayoutFileImpl  implements LayoutFile {
 					spaces += " ";
 				}
 			}
+			
+			if (isTruncate)
+				if (v.trim().length() > li.getTamanho())
+					v = v.trim().substring( 0, li.getTamanho());
 			
 			if (li.getAlinhamento() == ALINHAMENTO_DIREITO){
 				result = spaces+v.trim();
