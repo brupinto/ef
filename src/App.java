@@ -11,30 +11,32 @@ public class App {
 	private void montaArquivo(){
 		ExportFile ef 		= 	new ExportFile();
 		LayoutFile layout 	= ef.newLayout("HEADER");
+		layout.defineTruncateField( true );
 		
 	    layout.define("id", LayoutFile.STRING, LayoutFile.ALINHAMENTO_ESQUERDO, LayoutFile.ESPACO, 7,"HEADER");
 	    layout.define("totalLinhas", LayoutFile.NUMERIC, LayoutFile.ALINHAMENTO_DIREITO, LayoutFile.ZERO,33);
-	    layout.defineSeparador( ";" );
-	    layout.defineTitle( true );
 		layout.newLine();
 
 		
 		layout = ef.newLayout("BODY");
+	    layout.defineTruncateField( true );
 	    
 	    layout.define("idSection", LayoutFile.NUMERIC, LayoutFile.ALINHAMENTO_DIREITO, LayoutFile.ZERO, 10);
 	    layout.define("descricao", LayoutFile.STRING, LayoutFile.ALINHAMENTO_ESQUERDO, LayoutFile.ESPACO, 20);
-	    layout.define("sequencial", LayoutFile.NUMERIC, LayoutFile.ALINHAMENTO_DIREITO, LayoutFile.ZERO, 10);
+	    layout.define("teste", LayoutFile.STRING, LayoutFile.ALINHAMENTO_ESQUERDO, LayoutFile.ESPACO, 5);
+	    layout.define("sequencial", LayoutFile.NUMERIC, LayoutFile.ALINHAMENTO_DIREITO, LayoutFile.ZERO, 5);
 	    
 	    
 	    for (int i = 0; i < 50; i++){
 		
 	    	int row = layout.newLine();
 			layout.set("idSection", i);
-			layout.set("descricao", "ds_"+i);
+			layout.set("descricao", "AAAAAAAAAAAAAAAAA"+i+" ");
 			layout.set("sequencial", row);
 		} 
 	    
 		layout = ef.newLayout("TRAILER");
+		layout.defineTruncateField( true );
 		
 	    layout.define("id", LayoutFile.STRING, LayoutFile.ALINHAMENTO_ESQUERDO, LayoutFile.ESPACO, 7,"TRAILER");
 	    layout.define("filler", LayoutFile.NUMERIC, LayoutFile.ALINHAMENTO_DIREITO, LayoutFile.ZERO, 33);

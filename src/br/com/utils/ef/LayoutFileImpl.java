@@ -207,10 +207,10 @@ public class LayoutFileImpl  implements LayoutFile {
 					v = v.trim().substring( 0, li.getTamanho());
 			
 			if (li.getAlinhamento() == ALINHAMENTO_DIREITO){
-				result = spaces+v.trim();
+				result = spaces+v;
 			}
 			else
-				result = v.trim()+spaces;
+				result = v+spaces;
 		}
 		else{
 			result = v;
