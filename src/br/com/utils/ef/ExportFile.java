@@ -33,7 +33,26 @@ public class ExportFile {
 	 * @param identificadorLayout - Identificador do Layout
 	 * @return - Objeto do Layout
 	 */
-	public LayoutFileImpl newLayout( String identificadorLayout ) {
+	public LayoutFile newLayout( String identificadorLayout ) {
+		LayoutFileImpl 	lf = null;
+		try{
+			lf = new LayoutFileImpl();
+			LayoutIndex	li = new LayoutIndex(identificadorLayout, lf); 
+			layouts.add(li);
+		}
+		catch(Exception e){
+			System.out.println("[EF ERRO] "+e);
+		}
+		
+		return lf;
+	}
+	
+	/**
+	 * Metodo responsavel para criar um novo layout de registro dentro do arquivo
+	 * @param identificadorLayout - Identificador do Layout
+	 * @return - Objeto do Layout
+	 */
+	public LayoutComplexFile newLayoutComplex( String identificadorLayout ) {
 		LayoutFileImpl 	lf = null;
 		try{
 			lf = new LayoutFileImpl();

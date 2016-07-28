@@ -15,7 +15,7 @@ import java.util.List;
  * @since 17/005/2016
  *
  */
-public class LayoutFileImpl  implements LayoutFile {
+public class LayoutFileImpl  implements LayoutFile, LayoutComplexFile {
 	private class LayoutIndex{
 		private String 	idField;
 		private int 	dataType;
@@ -113,6 +113,11 @@ public class LayoutFileImpl  implements LayoutFile {
 		LayoutIndex li = new LayoutIndex(idField, datatype, alinhamento, preenchimento, tamanho, valordefault);
 		fields.add(li);
 	}
+	
+	public void define( String idField,int rowComplex, int datatype, int alinhamento, int preenchimento, int tamanho, String valordefault) {
+		LayoutIndex li = new LayoutIndex(idField, datatype, alinhamento, preenchimento, tamanho, valordefault);
+		fields.add(li);
+	}
 
 	
 	public void set( String idField, String value ) {
@@ -191,11 +196,11 @@ public class LayoutFileImpl  implements LayoutFile {
 		String 	spaces	= null;
 		int		nSpaces	= li.getTamanho() - v.trim().length();
 		
-		if (li.getPreenchimento() != ABSOLUTO){
+		if (li.getPreenchimento() != LayoutFile.ABSOLUTO){
 			spaces = "";
 			for(int i =0; i < nSpaces; i++){
 				if (!forceSpace){
-					spaces += (li.getPreenchimento() == ZERO)?"0":" ";
+					spaces += (li.getPreenchimento() == LayoutFile.ZERO)?"0":" ";
 				}
 				else{
 					spaces += " ";
@@ -206,7 +211,7 @@ public class LayoutFileImpl  implements LayoutFile {
 				if (v.trim().length() > li.getTamanho())
 					v = v.trim().substring( 0, li.getTamanho());
 			
-			if (li.getAlinhamento() == ALINHAMENTO_DIREITO){
+			if (li.getAlinhamento() == LayoutFile.ALINHAMENTO_DIREITO){
 				result = spaces+v;
 			}
 			else
@@ -245,6 +250,7 @@ public class LayoutFileImpl  implements LayoutFile {
 	public void defineSeparador( String separador ) { delimitador = separador; }
 	public void defineTitle( boolean b ) { hasTitle = b; }
 	public void define( String idField, int datatype, int alinhamento, int preenchimento, int tamanho) { define(idField,datatype,alinhamento,preenchimento,tamanho, ""); }
+	public void define( String idField, int rowComplex, int datatype, int alinhamento, int preenchimento, int tamanho) { define(idField,rowComplex,datatype,alinhamento,preenchimento,tamanho, ""); }
 	public void set( String idField, double value ) { set(idField, String.valueOf( value )); }
 	public void set( String idField, int value ) { set(idField, String.valueOf( value )); }
 	public void removeAllLines() {

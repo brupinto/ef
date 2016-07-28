@@ -9,7 +9,7 @@ import java.io.FileInputStream;
  * @since 17/05/2016
  *
  */
-public interface LayoutFile {
+public interface LayoutComplexFile {
 	/**
 	 * Datatype alphanumeric
 	 */
@@ -43,7 +43,7 @@ public interface LayoutFile {
 	 */
 	public static final int ABSOLUTO 				= 32;
 	
-	final int LAYOUTTYPE							= 0;
+	final int LAYOUTTYPE							= 1;
 	
 	/**
 	 * Retrieve the row formatted with fields Labels.
@@ -58,22 +58,24 @@ public interface LayoutFile {
 	/**
 	 * Define propeties about new field 
 	 * @param idField - field identify
+	 * @param rowComplex - linha de exibição
 	 * @param datatype - field datatype you can use use LayoutFile.NUMERIC. LayoutFile.STRING
 	 * @param alinhamento - define if data will align in left side or right side
 	 * @param preenchimento - replace spaces with LayoutFile.ESPACO or LayoutFile.ZERO
 	 * @param tamanho - length of field
 	 * @param valordefault - Default value to field
 	 */
-	public void define( String idField, int datatype, int alinhamento, int preenchimento, int tamanho, String valordefault);
+	public void define( String idField, int rowComplex,  int datatype, int alinhamento, int preenchimento, int tamanho, String valordefault);
 	/**
 	 * Define propeties about new field 
 	 * @param idField - field identify
+	 * @param rowComplex - linha de exibição
 	 * @param datatype - field datatype you can use use LayoutFile.NUMERIC. LayoutFile.STRING
 	 * @param alinhamento - define if data will align in left side or right side
 	 * @param preenchimento - replace spaces with LayoutFile.ESPACO or LayoutFile.ZERO
 	 * @param tamanho - length of field
 	 */
-	public void define( String idField, int datatype, int alinhamento, int preenchimento, int tamanho);
+	public void define( String idField, int rowComplex,  int datatype, int alinhamento, int preenchimento, int tamanho);
 	/**
 	 * Define separator character between the fields
 	 * if you not define a character EF will generate the row continium
