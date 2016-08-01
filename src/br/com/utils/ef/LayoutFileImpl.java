@@ -18,12 +18,12 @@ import java.util.List;
 public class LayoutFileImpl  implements LayoutFile, LayoutComplexFile {
 	private class LayoutIndex{
 		private String 	idField;
+		private int		rowComplex;
 		private int 	dataType;
 		private int		alinhamento;
 		private int 	preenchimento;
 		private int		tamanho;
 		private String  valorDefault;
-
 	
 		public String getIdField() { return idField; }
 		@SuppressWarnings( "unused" )
@@ -32,20 +32,25 @@ public class LayoutFileImpl  implements LayoutFile, LayoutComplexFile {
 		public int getPreenchimento() { return preenchimento; }
 		public int getTamanho() { return tamanho; }
 		public String getValorDefault() { return valorDefault; }
+		public int getRowComplex() { return rowComplex; }
 	
-		public LayoutIndex( String idField, int datatype, int alinhamento, int preenchimento, int tamanho, String valordefault){
+		public LayoutIndex( String idField, int rowComplex, int datatype, int alinhamento, int preenchimento, int tamanho, String valordefault){
 			this.idField		= idField;
 			this.dataType		= datatype;
 			this.alinhamento	= alinhamento;
 			this.preenchimento	= preenchimento;
 			this.tamanho		= tamanho;
 			this.valorDefault	= valordefault;
+			this.rowComplex		= rowComplex;
 		}
 	}
 	private class Data{
 		private String 		idField;
 		private LayoutIndex li;
 		private String 		valor;
+		private int 		rowComplex;
+		public int getRowComplex() { return rowComplex; }
+		public void setRowComplex(int rowComplex) { this.rowComplex = rowComplex; } 
 		public String getIdField() { return idField; }
 		public void setIdField( String idField ) { this.idField = idField; }
 		public LayoutIndex getLi() { return li; }
@@ -110,21 +115,32 @@ public class LayoutFileImpl  implements LayoutFile, LayoutComplexFile {
 	}
 	
 	public void define( String idField, int datatype, int alinhamento, int preenchimento, int tamanho, String valordefault) {
-		LayoutIndex li = new LayoutIndex(idField, datatype, alinhamento, preenchimento, tamanho, valordefault);
+		LayoutIndex li = new LayoutIndex(idField, -99999, datatype, alinhamento, preenchimento, tamanho, valordefault);
 		fields.add(li);
 	}
 	
 	public void define( String idField,int rowComplex, int datatype, int alinhamento, int preenchimento, int tamanho, String valordefault) {
-		LayoutIndex li = new LayoutIndex(idField, datatype, alinhamento, preenchimento, tamanho, valordefault);
+		
+		LayoutIndex li = new LayoutIndex(idField, rowComplex, datatype, alinhamento, preenchimento, tamanho, valordefault);
 		fields.add(li);
 	}
 
-	
 	public void set( String idField, String value ) {
 		for(Data data : current){
 			if (data.getIdField().equals( idField )){
 				data.setValor( value );
 				break;
+			}
+		}
+	}
+	
+	public void set( String idField,int rowComplex, String value ) {
+		for(Data data : current){
+			if (data.getRowComplex() == rowComplex){
+				if (data.getIdField().equals( idField )){
+					data.setValor( value );
+					break;
+				}
 			}
 		}
 	}
@@ -139,6 +155,7 @@ public class LayoutFileImpl  implements LayoutFile, LayoutComplexFile {
 		for(LayoutIndex li : fields){
 			Data d = new Data();
 			
+			d.setRowComplex( li.getRowComplex() );
 			d.setIdField( li.getIdField() );
 			d.setLi( li );
 			d.setValor( li.getValorDefault() );
@@ -160,8 +177,15 @@ public class LayoutFileImpl  implements LayoutFile, LayoutComplexFile {
 	}
 	
 	private String formatData(List<Data> datas){
-		String result = "";
+		String result 		= "";
+		int	   complexId	= datas.get( 0 ).getRowComplex();
+		
 		for (Data li : datas){
+			if (complexId != li.getRowComplex()){
+				complexId = li.getRowComplex();
+				result	 += "\r\n";
+			}
+			
 			String r = format(li.getLi(), li.getValor(),false);
 			if (delimitador != null)
 				r += delimitador;
@@ -249,10 +273,31 @@ public class LayoutFileImpl  implements LayoutFile, LayoutComplexFile {
 	
 	public void defineSeparador( String separador ) { delimitador = separador; }
 	public void defineTitle( boolean b ) { hasTitle = b; }
-	public void define( String idField, int datatype, int alinhamento, int preenchimento, int tamanho) { define(idField,datatype,alinhamento,preenchimento,tamanho, ""); }
-	public void define( String idField, int rowComplex, int datatype, int alinhamento, int preenchimento, int tamanho) { define(idField,rowComplex,datatype,alinhamento,preenchimento,tamanho, ""); }
-	public void set( String idField, double value ) { set(idField, String.valueOf( value )); }
-	public void set( String idField, int value ) { set(idField, String.valueOf( value )); }
+	
+	public void define( String idField, int datatype, int alinhamento, int preenchimento, int tamanho) {
+		define(idField,datatype,alinhamento,preenchimento,tamanho, ""); 
+	}
+	
+	public void define( String idField, int rowComplex, int datatype, int alinhamento, int preenchimento, int tamanho) {
+		define(idField,rowComplex,datatype,alinhamento,preenchimento,tamanho, ""); 
+	}
+	
+	public void set( String idField, double value ) {
+		set(idField, String.valueOf( value )); 
+	}
+	
+	public void set( String idField, int value ){
+		set(idField, String.valueOf( value )); 
+	}
+	
+	public void set( String idField, int rowComplex, double value ){
+		set(idField, rowComplex, String.valueOf( value )); 
+	}
+	
+	public void set( String idField, int rowComplex, int value ){
+		set(idField, rowComplex, String.valueOf( value )); 
+	}
+	
 	public void removeAllLines() {
 		close();
 		try{

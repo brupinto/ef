@@ -11,6 +11,8 @@ public class App {
 
 	private void montaArquivo(){
 		ExportFile ef 		= 	new ExportFile();
+		
+/*		
 		LayoutFile layout 	= ef.newLayout("HEADER");
 		layout.defineTruncateField( true );
 		
@@ -35,24 +37,31 @@ public class App {
 			layout.set("descricao", "AAAAAAAAAAAAAAAAA"+i+" ");
 			layout.set("sequencial", row);
 		} 
-	    
+*/	    
 	    LayoutComplexFile lcf = ef.newLayoutComplex( "COMPLEX" );
 	    
 	    lcf.define( "01", 1, LayoutFile.NUMERIC, LayoutFile.ALINHAMENTO_DIREITO, LayoutFile.ZERO, 10);
-	    lcf.define( "02", 1, LayoutFile.NUMERIC, LayoutFile.ALINHAMENTO_DIREITO, LayoutFile.ZERO, 10);
+	    lcf.define( "02", 1, LayoutFile.STRING,  LayoutFile.ALINHAMENTO_ESQUERDO, LayoutFile.ESPACO, 10);
 	    lcf.define( "03", 1, LayoutFile.NUMERIC, LayoutFile.ALINHAMENTO_DIREITO, LayoutFile.ZERO, 10);
 	    lcf.define( "04", 1, LayoutFile.NUMERIC, LayoutFile.ALINHAMENTO_DIREITO, LayoutFile.ZERO, 10);
 	    
 	    lcf.define( "01", 2, LayoutFile.NUMERIC, LayoutFile.ALINHAMENTO_DIREITO, LayoutFile.ZERO, 10);
 	    lcf.define( "02", 2, LayoutFile.NUMERIC, LayoutFile.ALINHAMENTO_DIREITO, LayoutFile.ZERO, 10);
 	    lcf.define( "03", 2, LayoutFile.NUMERIC, LayoutFile.ALINHAMENTO_DIREITO, LayoutFile.ZERO, 20);
+
+	    for (int i = 0; i < 5; i++){
+			
+	    	int row = lcf.newLine();
+	    	lcf.set("01", 1,  i);
+	    	lcf.set("02", 1, "A"+i);
+	    	lcf.set("04", 1, row);
+	    	
+	    	lcf.set("01", 2, 2* i);
+	    	lcf.set("02", 2, "1000"+i);
+	    	lcf.set("03", 2, row);
+		}
 	    
-	    
-	    layout.define("idSection", LayoutFile.NUMERIC, LayoutFile.ALINHAMENTO_DIREITO, LayoutFile.ZERO, 10);
-	    layout.define("descricao", LayoutFile.STRING, LayoutFile.ALINHAMENTO_ESQUERDO, LayoutFile.ESPACO, 20);
-	    layout.define("teste", LayoutFile.STRING, LayoutFile.ALINHAMENTO_ESQUERDO, LayoutFile.ESPACO, 5);
-	    layout.define("sequencial", LayoutFile.NUMERIC, LayoutFile.ALINHAMENTO_DIREITO, LayoutFile.ZERO, 5);
-	    
+/*	    
 		layout = ef.newLayout("TRAILER");
 		layout.defineTruncateField( true );
 		
@@ -64,7 +73,7 @@ public class App {
 		
 		layout = ef.getLayout("HEADER");
 		layout.set( "totalLinhas", ef.getTotalRows() );
-		
+*/		
 		try{
 			ef.saveFile("test/test.txt");
 		}

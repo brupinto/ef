@@ -101,6 +101,8 @@ public interface LayoutComplexFile {
 	 */
 	public void set( String idField, String value );
 	
+	public void set( String idField, int rowComplex, String value );
+	
 	/**
 	 * save current row in data pool and generate new data row empty
 	 * @return number of current row.
@@ -123,13 +125,13 @@ public interface LayoutComplexFile {
 	 * @param idField - field identify
 	 * @param value  - value you want save in the field of current row
 	 */
-	public void set( String idField, double value );
+	public void set( String idField, int rowComplex, double value );
 	/**
 	 * Define the value in the row
 	 * @param idField - field identify
 	 * @param value  - value you want save in the field of current row
 	 */
-	public void set( String idField, int value );
+	public void set( String idField, int rowComplex, int value );
 	/**
 	 * Clear data pool and put it empty
 	 */
