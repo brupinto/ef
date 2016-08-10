@@ -145,6 +145,44 @@ public class ExportFile {
 		}
 	}
 	
+	public FileInputStream getContent()  throws Exception {
+		FileWriter			fw	= null;
+		FileInputStream		rtn	= null;
+			
+		try{
+			File file	= new File(".TEMP.TMP");
+			fw	 		= new FileWriter(file);
+
+			for (LayoutIndex row : layouts){
+				LayoutFile	 	lf 		= row.getLayoutFile();
+				String 			title 	= lf.getTitle();
+				FileInputStream fis 	= lf.getRows();
+				int				c 		= fis.read();
+				
+				if (title != null){
+					fw.write(title);
+					fw.write("\r\n");
+				}
+
+				while (c != -1){
+					fw.write( c );
+					c = fis.read();
+				}
+				fis.close();
+				lf.close();
+			}
+			rtn =  new FileInputStream(file);
+			
+			fw.close();
+			fw	= null;
+		}catch(Exception e){
+			fw 	= null;
+			throw e;
+		}
+		
+		return rtn;
+	}
+	
 	/**
 	 * Limpa os dados de todos os layouts
 	 */

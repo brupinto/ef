@@ -2,7 +2,9 @@ package br.com.utils.ef;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -168,7 +170,7 @@ public class LayoutFileImpl  implements LayoutFile, LayoutComplexFile {
 	
 	private void writeTempFile() {
 		try{
-			FileWriter 	fw	= new FileWriter(bf,true);
+			OutputStreamWriter	fw	= new OutputStreamWriter(new FileOutputStream(bf,true), "UTF-8");
 			fw.write(formatData(current)+"\r\n");
 			fw.close();
 		}catch(Exception e){
