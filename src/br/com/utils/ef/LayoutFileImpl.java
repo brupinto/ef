@@ -3,7 +3,6 @@ package br.com.utils.ef;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -61,17 +60,24 @@ public class LayoutFileImpl  implements LayoutFile, LayoutComplexFile {
 		public void setValor( String valor ) { this.valor = valor; }
 	}
 	
-	private List<LayoutIndex> 	fields 		= new ArrayList<LayoutIndex>();
-	private List<Data>			current		= new ArrayList<Data>();
-	private int					rows		= 0;
-	private Boolean 			hasTitle	= false;
-	private Boolean 			isTruncate	= false;
-	private String 				delimitador	= null;
-	private File    			bf 			= null;
+	private List<LayoutIndex> 	fields 			= new ArrayList<LayoutIndex>();
+	private List<Data>			current			= new ArrayList<Data>();
+	private List<String>		rowsFormated	= null;
+	private int					rows			= 0;
+	private Boolean 			hasTitle		= false;
+	private Boolean 			isTruncate		= false;
+	private String 				delimitador		= null;
+	private File    			bf 				= null;
+	private Boolean				withBufFile	=	 false;
 		 
-	public LayoutFileImpl() throws Exception {
+	public LayoutFileImpl(Boolean withBufFile) throws Exception {
+		this.withBufFile = withBufFile;
 		
-		createBufFile();
+		if (withBufFile)
+			createBufFile();
+		else{
+			rowsFormated = new ArrayList<String>();
+		}
 		
 	}
 	
@@ -85,7 +91,8 @@ public class LayoutFileImpl  implements LayoutFile, LayoutComplexFile {
 	}
 	public void close(){
 		try{
-			bf.deleteOnExit();
+			if (withBufFile)
+				bf.deleteOnExit();
 		}catch(Exception e){
 			System.out.println("[EF ERRO] "+e);
 		}
@@ -114,6 +121,14 @@ public class LayoutFileImpl  implements LayoutFile, LayoutComplexFile {
 			System.out.println("[EF ERRO] "+e);
 		}
 		return fis;
+	}
+	
+	public List<String> getRowsFormated() {
+		if (current.size() > 0){
+			newLine();
+		}
+		
+		return rowsFormated;
 	}
 	
 	public void define( String idField, int datatype, int alinhamento, int preenchimento, int tamanho, String valordefault) {
@@ -170,9 +185,17 @@ public class LayoutFileImpl  implements LayoutFile, LayoutComplexFile {
 	
 	private void writeTempFile() {
 		try{
-			OutputStreamWriter	fw	= new OutputStreamWriter(new FileOutputStream(bf,true), "UTF-8");
-			fw.write(formatData(current)+"\r\n");
-			fw.close();
+			String linha = formatData(current)+"\r\n";
+			
+			if (withBufFile){
+				OutputStreamWriter	fw	= new OutputStreamWriter(new FileOutputStream(bf,true), "UTF-8");
+				fw.write(linha);
+				fw.close();
+			}
+			else{
+				rowsFormated.add(linha);
+			}
+				
 		}catch(Exception e){
 			System.out.println("[EF ERRO] "+e);
 		}
@@ -303,7 +326,13 @@ public class LayoutFileImpl  implements LayoutFile, LayoutComplexFile {
 	public void removeAllLines() {
 		close();
 		try{
-			createBufFile();
+			if (withBufFile){
+				createBufFile();
+			}
+			else
+			{
+				rowsFormated = new ArrayList<String>();
+			}
 		} catch(Exception e){
 			System.out.println("[EF ERRO] "+e);
 		}

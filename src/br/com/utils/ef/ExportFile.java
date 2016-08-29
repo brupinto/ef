@@ -36,7 +36,21 @@ public class ExportFile {
 	public LayoutFile newLayout( String identificadorLayout ) {
 		LayoutFileImpl 	lf = null;
 		try{
-			lf = new LayoutFileImpl();
+			lf = new LayoutFileImpl(true);
+			LayoutIndex	li = new LayoutIndex(identificadorLayout, lf); 
+			layouts.add(li);
+		}
+		catch(Exception e){
+			System.out.println("[EF ERRO] "+e);
+		}
+		
+		return lf;
+	}
+	
+	public LayoutFile newLayout( String identificadorLayout, Boolean withBufFile ) {
+		LayoutFileImpl 	lf = null;
+		try{
+			lf = new LayoutFileImpl(withBufFile);
 			LayoutIndex	li = new LayoutIndex(identificadorLayout, lf); 
 			layouts.add(li);
 		}
@@ -55,7 +69,7 @@ public class ExportFile {
 	public LayoutComplexFile newLayoutComplex( String identificadorLayout ) {
 		LayoutFileImpl 	lf = null;
 		try{
-			lf = new LayoutFileImpl();
+			lf = new LayoutFileImpl(true);
 			LayoutIndex	li = new LayoutIndex(identificadorLayout, lf); 
 			layouts.add(li);
 		}
@@ -177,6 +191,31 @@ public class ExportFile {
 			fw	= null;
 		}catch(Exception e){
 			fw 	= null;
+			throw e;
+		}
+		
+		return rtn;
+	}
+	
+	public List<String> getRows()  throws Exception {
+		List<String> rtn = new ArrayList<String>();
+		try{
+			for (LayoutIndex row : layouts){
+				LayoutFile	 	lf 				= row.getLayoutFile();
+				String 			title 			= lf.getTitle();
+				List<String> 	formatedRows	= lf.getRowsFormated();
+				
+				if (title != null){
+					rtn.add(title);
+					rtn.add("\r\n");
+				}
+
+				for (String rowFormated : formatedRows){
+					rtn.add(rowFormated);
+				}
+				lf.close();
+			}
+		}catch(Exception e){
 			throw e;
 		}
 		
